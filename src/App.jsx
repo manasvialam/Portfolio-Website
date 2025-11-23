@@ -91,19 +91,57 @@ const App = () => {
   ];
 
   const projects = [
-    {
-      title: "Predictive Modeling Platform",
-      description: "Developed a platform using Python and Flask to deploy various machine learning models with real-time feedback.",
-      tags: ["Python", "Flask", "ML", "Deployment"],
-      link: "#",
-    },
-    {
-      title: "Decentralized Voting System",
-      description: "Implemented a secure, blockchain-based voting system prototype using Solidity and React.",
-      tags: ["Blockchain", "Solidity", "React", "Security"],
-      link: "#",
-    },
-  ];
+  {
+    title: "Kidney Tumor Detection, Deep Learning",
+    description: "Fine-tuned deep learning model achieving 98.3% accuracy in kidney tumor classification. Used MLflow + DVC for tracking and deployed as a React + Docker web app.",
+    tags: ["Python", "Deep Learning", "MLflow", "DVC"],
+    link: "https://github.com/manasvialam/Kidney-Disease-Classification",
+  },
+  {
+    title: "Few-Shot Learning with Prototypical Networks",
+    description: "Implemented Prototypical Networks on CIFAR-100, boosting accuracy from ~37% to ~70% with optimized episodic training.",
+    tags: ["Python", "PyTorch", "Few-Shot Learning"],
+    link: "https://github.com/manasvialam/Few-shot-learning",
+  },
+  {
+    title: "CRUD Operations using MERN Stack",
+    description: "Full-stack CRUD app with MongoDB, Express, React, and Node.js featuring responsive UI and RESTful API.",
+    tags: ["MongoDB", "Express.js", "React", "Node.js"],
+    link: "https://github.com/manasvialam/Customer-Details",
+  },
+  {
+    title: "Sentiment Analysis using Deep Learning",
+    description: "Compared NLTK VADER vs Hugging Face RoBERTa on Amazon reviews — RoBERTa achieved superior performance.",
+    tags: ["Python", "NLP", "Transformers"],
+    link: "https://github.com/manasvialam/Sentiment-Analysis",
+  },
+  {
+    title: "Customer Analysis using Tableau",
+    description: "Interactive dashboard analyzing revenue by state and month, revealing high-performing regions and seasonal trends.",
+    tags: ["Tableau", "Analytics", "Visualization"],
+    link: "http://public.tableau.com/app/profile/manasvi.alam/viz/CustomerAnalysis_16890173373860/Dashboard1",
+  },
+  {
+    title: "Interactive Netflix Content Analysis Dashboard",
+    description: "Tableau dashboard exploring Netflix content by country, genre, ratings, and release trends.",
+    tags: ["Tableau", "EDA", "Analytics"],
+    link: "https://public.tableau.com/app/profile/manasvi.alam/viz/Netflix_16889980219470/Netflix",
+  },
+  {
+    title: "Thompson Sampling – Ad Selection Optimization",
+    description: "Bayesian Thompson Sampling model optimizing ad selection across 10 variants over 10,000 rounds.",
+    tags: ["Python", "Bayesian", "Optimization"],
+    link: "https://github.com/manasvialam/Ads-CTR-Optimization",
+  },
+  {
+    title: "Movie Recommendation System",
+    description: "TF-IDF + cosine similarity recommender on 4.8K+ movies using genres, cast, and keywords.",
+    tags: ["Python", "Machine Learning", "NLP"],
+    link: "https://github.com/manasvialam/Movie-Recommendation-System",
+  }
+];
+
+
 
 const experiences = [
     {
@@ -114,7 +152,7 @@ const experiences = [
       icon: <Briefcase className="w-5 h-5" />,
       logoUrl: "/portfolio-website/expo.jpeg", // ← in public folder
       highlights: [
-        "Leading a 10-member team building LLM-powered RAG systems preventing $20M+ claim denials yearly",
+        "Leading a 10-member team building LLM-powered RAG systems preventing $20M+ worth claim denials yearly",
         "Deployed custom embedding + reranker pipelines hitting 98.2% accuracy in production",
         "Built intelligent email & multi-format parser cutting processing time by 89%",
         "Systems live at Fortune 500 healthcare and $2B+ Medicaid platforms across the US"
@@ -858,20 +896,37 @@ useEffect(() => {
 
       {/* Projects Section */}
       <section id="projects" className={getSectionClass("projects")}>
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold mb-10 text-gray-800 text-center">
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center bg-gradient-to-r from-blue-700 via-cyan-600 to-sky-600 bg-clip-text text-transparent">
             Key Projects
           </h2>
-          <div className="grid md:grid-cols-2 gap-6">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {projects.map((project, idx) => (
-              <Card key={idx} className="hover:scale-[1.01] transform origin-center">
-                <h3 className="text-xl font-semibold text-gray-800 mb-2 leading-tight">
-                  {project.title}
-                </h3>
-                <p className="text-sm text-gray-700 leading-normal mb-3">
+              <Card key={idx} className="hover:scale-[1.02] transform origin-center transition-all duration-300 h-full flex flex-col">
+                {/* Title + Link Icon */}
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-lg font-bold text-gray-800 leading-tight">
+                    {project.title}
+                  </h3>
+                  {project.link && project.link !== "#" && (
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:text-blue-800 transition-colors"
+                      title="View Code / Live Demo"
+                    >
+                      <ExternalLink className="w-5 h-5" />
+                    </a>
+                  )}
+                </div>
+
+                <p className="text-sm text-gray-700 leading-relaxed flex-grow">
                   {project.description}
                 </p>
-                <div className="flex flex-wrap gap-1.5 mb-3">
+
+                <div className="flex flex-wrap gap-1.5 mt-4">
                   {project.tags.map((tag, i) => (
                     <span
                       key={i}
@@ -881,14 +936,6 @@ useEffect(() => {
                     </span>
                   ))}
                 </div>
-                <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
-                  >
-                    View Project <ExternalLink className="w-4 h-4 ml-1" />
-                  </a>
               </Card>
             ))}
           </div>
@@ -896,7 +943,6 @@ useEffect(() => {
       </section>
 
       {/* Achievements & Leadership Section */}
-      {/* Achievements & Leadership - Ultra Clean & Professional */}
       <section id="achievements" className={getSectionClass("achievements")}>
         <div className="max-w-4xl mx-auto px-6">
           <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center bg-gradient-to-r from-blue-700 via-cyan-600 to-sky-600 bg-clip-text text-transparent">
