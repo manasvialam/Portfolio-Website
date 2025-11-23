@@ -14,6 +14,7 @@ import {
   GraduationCap,
   Sparkles,
   Zap,
+  Menu
 } from "lucide-react";
 
 const App = () => {
@@ -22,6 +23,45 @@ const App = () => {
 
   const [selectedExp, setSelectedExp] = useState(null);   
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Auto-highlight active section on scroll — FIXED: Contact works at bottom
+  useEffect(() => {
+    const handleScroll = () => {
+      const sections = [
+        "hero", "about", "experience", "skills", "education",
+        "publications", "projects", "achievements", "certifications", "contact"
+      ];
+
+      const scrollPos = window.scrollY + window.innerHeight / 2; // Check middle of viewport
+
+      let current = "hero";
+
+      for (const section of sections) {
+        const el = document.getElementById(section);
+        if (el) {
+          const { offsetTop, offsetHeight } = el;
+          if (scrollPos >= offsetTop && scrollPos < offsetTop + offsetHeight) {
+            current = section;
+            break;
+          }
+        }
+      }
+
+      // Special case: if we're past the last section → force "contact"
+      const lastSection = document.getElementById("contact");
+      if (lastSection && scrollPos >= lastSection.offsetTop) {
+        current = "contact";
+      }
+
+      setActiveSection(current);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll(); // Run once on load
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const allSkills = [
     // Programming Languages
@@ -382,25 +422,101 @@ useEffect(() => {
   return (
     <div className="min-h-screen font-sans bg-gradient-to-br from-blue-50 via-sky-50 to-white">
       {/* Navigation Bar - FIXED: Hidden on mobile, visible on md: and above */}
-      <nav className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 shadow-md hidden md:block">
-        <div className="max-w-7xl mx-auto px-6 py-3 flex flex-col md:flex-row justify-between items-center">
-          <h1 className="text-xl font-extrabold text-gray-800 tracking-tight md:mb-0">
-            Manasvi Alam
-          </h1>
-          <div className="flex gap-4 overflow-x-auto py-1 md:py-0 justify-center items-center">
-            <NavLink href="#hero">Home</NavLink>
-            <NavLink href="#about">About</NavLink>
-            <NavLink href="#experience">Experience</NavLink>
-            <NavLink href="#skills">Skills</NavLink>
-            <NavLink href="#education">Education</NavLink>
-            <NavLink href="#publications">Publications</NavLink>
-            <NavLink href="#projects">Projects</NavLink>
-            <NavLink href="#achievements">Achievements</NavLink>
-            <NavLink href="#certifications">Certifications</NavLink>
-            <NavLink href="#contact">Contact</NavLink>
+      {/* Navigation - Desktop: Your Original | Mobile: Clean Blue Hamburger Only */}
+      {/* Navigation - Desktop: Underline Only | Mobile: Blue Hamburger Only */}
+      <nav className="fixed top-0 left-0 right-0 bg-white/90 backdrop-blur-md z-50 shadow-md">
+        {/* Desktop Nav - Underline Only, No Rectangle */}
+        <div className="hidden md:flex max-w-7xl mx-auto px-6 py-4 items-center justify-between">
+          <h1 className="text-xl font-extrabold text-gray-800 tracking-tight">Manasvi Alam</h1>
+          <div className="flex gap-6">
+            {[
+              { id: "hero", name: "Home" },
+              { id: "about", name: "About" },
+              { id: "experience", name: "Experience" },
+              { id: "skills", name: "Skills" },
+              { id: "education", name: "Education" },
+              { id: "publications", name: "Publications" },
+              { id: "projects", name: "Projects" },
+              { id: "achievements", name: "Achievements" },
+              { id: "certifications", name: "Certifications" },
+              { id: "contact", name: "Contact" }
+            ].map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className={`text-sm font-medium transition-all duration-300 px-1 pb-1 border-b-2 ${
+                  activeSection === item.id
+                    ? "text-blue-700 border-blue-600"
+                    : "text-gray-600 border-transparent hover:text-blue-600 hover:border-blue-300"
+                }`}
+              >
+                {item.name}
+              </a>
+            ))}
           </div>
         </div>
+
+        {/* Mobile: Only Blue Hamburger */}
+        <div className="md:hidden fixed top-4 right-4 z-50">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-3 bg-white/90 backdrop-blur-md rounded-lg shadow-lg hover:shadow-xl transition-all"
+          >
+            <div className="space-y-1">
+              <span className="block w-6 h-0.5 bg-blue-600"></span>
+              <span className="block w-6 h-0.5 bg-blue-600"></span>
+              <span className="block w-6 h-0.5 bg-blue-600"></span>
+            </div>
+          </button>
+        </div>
       </nav>
+
+      {/* Mobile Sidebar */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 z-50 md:hidden">
+          <div className="fixed inset-0 bg-black/40" onClick={() => setMobileMenuOpen(false)} />
+          <div className="fixed right-0 top-0 h-full w-64 bg-white shadow-2xl">
+            <div className="p-6 border-b">
+              <h2 className="text-xl font-bold text-gray-800">Menu</h2>
+            </div>
+            <div className="py-2">
+              {[
+                { id: "hero", name: "Home" },
+                { id: "about", name: "About" },
+                { id: "experience", name: "Experience" },
+                { id: "skills", name: "Skills" },
+                { id: "education", name: "Education" },
+                { id: "publications", name: "Publications" },
+                { id: "projects", name: "Projects" },
+                { id: "achievements", name: "Achievements" },
+                { id: "certifications", name: "Certifications" },
+                { id: "contact", name: "Contact" }
+              ].map((item) => (
+                <a
+                  key={item.id}
+                  href={`#${item.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById(item.id)?.scrollIntoView({ behavior: "smooth" });
+                    setMobileMenuOpen(false);
+                  }}
+                  className={`block px-6 py-4 text-base font-medium transition-all duration-200 border-l-4 ${
+                    activeSection === item.id
+                      ? "text-blue-700 bg-blue-50 border-blue-600"
+                      : "text-gray-700 border-transparent hover:text-blue-600 hover:bg-gray-50"
+                  }`}
+                >
+                  {item.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Hero Section */}
       {/* Adjusted pt-28 to pt-16 since the nav bar is now hidden on mobile */}
